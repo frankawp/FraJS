@@ -10,7 +10,12 @@
 		<input id="mouseX" type="text"/>
 		<input id="mouseY" type="text"/>
 		<div style="width:500px;height:500px; border:2px #ccc solid;">
-			<div id='target' style=";border:1px #ccc solid; width:100px;height:100px; position:relative; top:100px; left:100px;"></div>
+			<div id='target' style="border:1px #ccc solid; width:100px;height:100px; position:relative; top:100px; left:100px;"></div>
+		</div>
+		<div id="hanoi" style="border:1px #ccc solid; ">
+			<div id="towerA" style="display:inline-block;border:1px #ccc solid; width:32%; "></div>
+			<div id="towerB" style="display:inline-block;border:1px #ccc solid;width:32%;"></div>
+			<div id="towerC" style="display:inline-block;border:1px #ccc solid;width:32%;"></div>
 		</div>
 		<script>
 			var inputX = $id('mouseX');
@@ -20,6 +25,12 @@
 				inputX.value = getMouseX(e);
 				inputY.value = getMouseY(e);
 			}
+			
+
+			var Hanoi = new hanoi(6);
+			setTimeout("Hanoi.start()",1000);
+			
+
 		</script>
 	</body>
 </html>
