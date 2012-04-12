@@ -48,22 +48,22 @@ function getElementY(elem){
 	return elementY;
 }
 
-function moveable(elem){	
+function draggable(elem){	
 	elem.style.left = getElementX(elem)+'px';
 	elem.style.top = getElementY(elem)+'px';
 	elem.style.position='absolute';
 	elem.onmousedown = function(e){
-		elem.moving = true;
-		elem.grapX = getMouseX(e) - this.offsetLeft;
-		elem.grapY = getMouseY(e) - this.offsetTop;
+		this.moving = true;
+		this.gapX = getMouseX(e) - getElementX(this);
+		this.gapY = getMouseY(e) - getElementY(this);
 	};
 	elem.onmouseup = function(e){
-		elem.moving = false;
+		this.moving = false;
 	};
 	elem.onmousemove = function(e){
-		if(this.moving){			
-			elem.style.left = (getMouseX(e)-this.grapX) + 'px';
-			elem.style.top = (getMouseY(e)-this.grapY) + 'px';
+		if(this.moving){
+			this.style.left = (getMouseX(e)-this.gapX) + 'px';
+			this.style.top = (getMouseY(e)-this.gapY) + 'px';
 		}
 	};	
 }

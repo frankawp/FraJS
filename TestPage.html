@@ -10,12 +10,12 @@
 		<input id="mouseX" type="text"/>
 		<input id="mouseY" type="text"/>
 		<div style="width:500px;height:500px; border:2px #ccc solid;">
-			<div id='target' style="border:1px #ccc solid; width:100px;height:100px; position:relative; top:100px; left:100px;"></div>
+			<div id='target' style=";border:1px #ccc solid; width:100px;height:100px; position:relative; top:100px; left:100px;"></div>
 		</div>
 		<script>
 			var inputX = $id('mouseX');
 			var inputY = $id('mouseY');
-			moveable($id('target'));
+			draggable($id('target'));
 			document.onmousemove = function(e) {
 				inputX.value = getMouseX(e);
 				inputY.value = getMouseY(e);
