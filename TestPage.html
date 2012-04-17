@@ -22,10 +22,14 @@
 		</div>
 		<h3>缓动函数</h3>
 		<div id='tweenContainer' style="height:100px; border:1px #ccc solid;"></div>
-		<select id="algorithmList"></select>
-		<input type="radio" id="tweenType" name="tweenType" value="easeIn" />easeIn
-		<input type="radio" id="tweenType" name="tweenType" value="easeOut" />easeOut
-		<input type="radio" id="tweenType" name="tweenType" value="easeInOut" />easeInOut
+		<div id='chart' style='height:300px; width:500px; border:1px #ccc solid; position:relative;'></div>
+		<select id="algorithmList" onchange="drawChart()"></select>
+		<input type="radio" id='easeIn' name="tweenType" value="easeIn" onclick="drawChart()" />
+		easeIn
+		<input type="radio" id='easeOut' name="tweenType" value="easeOut" onclick="drawChart()"/>
+		easeOut
+		<input type="radio" id='easeInOut' name="tweenType" value="easeInOut" onclick="drawChart()"/>
+		easeInOut
 		<input type="button" id="run" value="Run" onclick="Run()"/>
 		<script>
 			var inputX = $id('mouseX');
@@ -36,7 +40,8 @@
 				inputY.value = getMouseY(e);
 			}
 			var Hanoi = new hanoi(6);
-			setTimeout("Hanoi.start()",1000);
+			setTimeout("Hanoi.start()", 1000);
+
 		</script>
 		<script>
 			var tweenContainer = $id('tweenContainer');
@@ -45,29 +50,57 @@
 			target.style.width = '100px';
 			target.style.height = '100px';
 			target.style.position = 'relative';
-			tweenContainer.appendChild(target);			
-			var b=0,c=tweenContainer.offsetWidth-target.offsetWidth,d=100,t=0;
-			
-			for(var name in Tween){
+			tweenContainer.appendChild(target);
+			var b = 0, c = tweenContainer.offsetWidth - target.offsetWidth, d = 100, t = 0;
+
+			for(var name in Tween) {
 				algorithmList = $id('algorithmList');
-				algorithmList.options[algorithmList.options.length]= new Option(name,name);				
+				algorithmList.options[algorithmList.options.length] = new Option(name, name);
 			}
 			var algorithmType = 'Linear';
-			var tweenType ='easeIn';
-			function Run(){
-				if(t==0){
-					tweenType = $id('tweenType').value;
-					algorithmType = $id('algorithmList').value;					
-					target.style.left = '0px';					
-				}				
-				target.style.left = Math.round(eval('Tween.'+algorithmType+'.'+tweenType+'(t,b,c,d)'))+'px';
-				if(t<d){
-					t++;
-					setTimeout(Run,10);
-				}else{
-					b=0,c=tweenContainer.offsetWidth-target.offsetWidth,d=100,t=0;
+			var tweenType = 'easeIn';
+			function Run() {
+				if(t == 0) {$id('easeIn').checked == true && ( tweenType = 'easeIn'); $id('easeOut').checked == true && ( tweenType = 'easeOut'); $id('easeInOut').checked == true && ( tweenType = 'easeInOut');
+					algorithmType = $id('algorithmList').value;
+					target.style.left = '0px';
 				}
-			}			
+				target.style.left = Math.round(Tween[algorithmType][tweenType](t, b, c, d)) + 'px';
+				if(t < d) {
+					t++;
+					setTimeout(Run, 10);
+				} else { b = 0, c = tweenContainer.offsetWidth - target.offsetWidth, d = 100, t = 0;
+				}
+			}
+
+			function drawChart() {
+				$id('easeIn').checked  && ( tweenType = 'easeIn'); 
+				$id('easeOut').checked && ( tweenType = 'easeOut'); 
+				$id('easeInOut').checked  && ( tweenType = 'easeInOut');
+				algorithmType = $id('algorithmList').value || 'Linear';
+				chart = $id('chart');
+				chart.innerHTML = "";
+				function createPoint(x, y) {
+					point = document.createElement('div');
+					point.style.background = '#f60';
+					point.style.fontSize = '0';
+					point.style.width = '3px';
+					point.style.height = '3px';
+					point.style.position = 'absolute';
+					point.style.left = x + 'px';
+					point.style.top = (chart.offsetHeight - y-2) + 'px';
+					return point;
+				}
+
+				var t = 0;
+				var b = 0;
+				var c = chart.offsetHeight-2;
+				var d = chart.offsetWidth-2;
+				while(t < d) {
+					chart.appendChild(createPoint(t, Math.round(Tween[algorithmType][tweenType](t, b, c, d))));
+					t++;
+				}
+			}
+			drawChart();
 		</script>
 	</body>
 </html>

@@ -68,6 +68,12 @@ function draggable(elem) {
 	};
 }
 
+function $extend(destination,source){
+	for(var name in source){
+		destination[name] = source[name];
+	}
+}
+
 function towerDisplay(id, n) {
 	this.count = n;
 	this.name = id;
