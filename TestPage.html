@@ -5,18 +5,28 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<title>Test Page</title>
 		<script language="JavaScript" src="base.js"></script>
+		<script language="JavaScript" src="Tween.js"></script>
 	</head>
 	<body style="height: 1000px">
+		<h3>Draggable</h3>
 		<input id="mouseX" type="text"/>
 		<input id="mouseY" type="text"/>
 		<div style="width:500px;height:500px; border:2px #ccc solid;">
 			<div id='target' style="border:1px #ccc solid; width:100px;height:100px; position:relative; top:100px; left:100px;"></div>
 		</div>
+		<h3>汉诺塔</h3>
 		<div id="hanoi" style="border:1px #ccc solid; ">
 			<div id="towerA" style="display:inline-block;border:1px #ccc solid; width:32%; "></div>
 			<div id="towerB" style="display:inline-block;border:1px #ccc solid;width:32%;"></div>
 			<div id="towerC" style="display:inline-block;border:1px #ccc solid;width:32%;"></div>
 		</div>
+		<h3>缓动函数</h3>
+		<div id='tweenContainer' style="height:100px; border:1px #ccc solid;"></div>
+		<select id="algorithmList"></select>
+		<input type="radio" id="tweenType" name="tweenType" value="easeIn" />easeIn
+		<input type="radio" id="tweenType" name="tweenType" value="easeOut" />easeOut
+		<input type="radio" id="tweenType" name="tweenType" value="easeInOut" />easeInOut
+		<input type="button" id="run" value="Run" onclick="Run()"/>
 		<script>
 			var inputX = $id('mouseX');
 			var inputY = $id('mouseY');
@@ -25,12 +35,39 @@
 				inputX.value = getMouseX(e);
 				inputY.value = getMouseY(e);
 			}
-			
-
 			var Hanoi = new hanoi(6);
 			setTimeout("Hanoi.start()",1000);
+		</script>
+		<script>
+			var tweenContainer = $id('tweenContainer');
+			var target = document.createElement('div');
+			target.style.background = '#00f';
+			target.style.width = '100px';
+			target.style.height = '100px';
+			target.style.position = 'relative';
+			tweenContainer.appendChild(target);			
+			var b=0,c=tweenContainer.offsetWidth-target.offsetWidth,d=100,t=0;
 			
-
+			for(var name in Tween){
+				algorithmList = $id('algorithmList');
+				algorithmList.options[algorithmList.options.length]= new Option(name,name);				
+			}
+			var algorithmType = 'Linear';
+			var tweenType ='easeIn';
+			function Run(){
+				if(t==0){
+					tweenType = $id('tweenType').value;
+					algorithmType = $id('algorithmList').value;					
+					target.style.left = '0px';					
+				}				
+				target.style.left = Math.round(eval('Tween.'+algorithmType+'.'+tweenType+'(t,b,c,d)'))+'px';
+				if(t<d){
+					t++;
+					setTimeout(Run,10);
+				}else{
+					b=0,c=tweenContainer.offsetWidth-target.offsetWidth,d=100,t=0;
+				}
+			}			
 		</script>
 	</body>
 </html>
