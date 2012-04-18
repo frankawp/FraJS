@@ -15,10 +15,11 @@
 			<div id='target' style="border:1px #ccc solid; width:100px;height:100px; position:relative; top:100px; left:100px;"></div>
 		</div>
 		<h3>汉诺塔</h3>
-		<div id="hanoi" style="border:1px #ccc solid; ">
+		<div id="hanoi" style="border:1px #ccc solid;">
 			<div id="towerA" style="display:inline-block;border:1px #ccc solid; width:32%; "></div>
 			<div id="towerB" style="display:inline-block;border:1px #ccc solid;width:32%;"></div>
 			<div id="towerC" style="display:inline-block;border:1px #ccc solid;width:32%;"></div>
+			<div><input id="hanoiRun" type="button" value="Run" /></div>
 		</div>
 		<h3>缓动函数</h3>
 		<div id='tweenContainer' style="height:100px; border:1px #ccc solid;"></div>
@@ -40,7 +41,9 @@
 				inputY.value = getMouseY(e);
 			}
 			var Hanoi = new hanoi(6);
-			setTimeout("Hanoi.start()", 1000);
+			$id('hanoiRun').onclick=function(){
+				Hanoi.start()
+			}
 
 		</script>
 		<script>
@@ -101,6 +104,7 @@
 				}
 			}
 			drawChart();
+			//var box = new LightBox();
 		</script>
 	</body>
 </html>
