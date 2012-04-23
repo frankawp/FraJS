@@ -180,11 +180,8 @@ towerDisplay.prototype.moveViewOut = function() {
 }
 
 var time=200;
-function delay(obj, func, args, t) {
-	window['delayFunc'+time] = function() {
-		func.apply(obj,args);
-	}
-	setTimeout('delayFunc'+time+'()', time);
+function delay(obj, func, args, t) {	
+	setTimeout(function(){func.apply(obj,args);},time);	
 	time = time+t;
 }
 

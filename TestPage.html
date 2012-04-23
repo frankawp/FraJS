@@ -6,6 +6,7 @@
 		<title>Test Page</title>
 		<script language="JavaScript" src="base.js"></script>
 		<script language="JavaScript" src="Tween.js"></script>
+		<script language="JavaScript" src="underscore.js"></script>
 	</head>
 	<body style="height: 1000px">
 		<h3>Draggable</h3>
@@ -42,8 +43,11 @@
 			}
 			var Hanoi = new hanoi(6);
 			$id('hanoiRun').onclick=function(){
-				Hanoi.start()
+				Hanoi.start();
 			}
+			
+			function test(){alert("show")};
+			_.delay(test,2000);
 
 		</script>
 		<script>
