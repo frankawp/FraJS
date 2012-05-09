@@ -149,12 +149,11 @@ function towerDisplay(id, n) {
 			this.tower.insertBefore(temp, this.topNode);
 			this.topNode = temp;
 		}
-	}	
+	}
 };
 
-
 towerDisplay.prototype.moveViewIn = function(elem) {
-	if(this.topNode) {		
+	if(this.topNode) {
 		this.tower.insertBefore(elem, this.topNode);
 	} else {
 		this.tower.appendChild(elem);
@@ -178,11 +177,12 @@ towerDisplay.prototype.moveViewOut = function() {
 		return temp;
 	}
 }
-
-var time=200;
-function delay(obj, func, args, t) {	
-	setTimeout(function(){func.apply(obj,args);},time);	
-	time = time+t;
+var time = 200;
+function delay(obj, func, args, t) {
+	setTimeout(function() {
+		func.apply(obj, args);
+	}, time);
+	time = time + t;
 }
 
 function hanoi(num) {
@@ -195,7 +195,7 @@ function hanoi(num) {
 	};
 	this.move = function(count, start, target, temp) {
 		if(count == 1) {
-			delay(this,this.moveTower,[start,target],200);
+			delay(this, this.moveTower, [start, target], 200);
 			//this.moveTower(start, target);
 		} else {
 			this.move(count - 1, start, temp, target);
@@ -205,5 +205,123 @@ function hanoi(num) {
 	};
 	this.start = function() {
 		this.move(this.towerA.count, this.towerA, this.towerC, this.towerB);
+	}
+}
+
+function caculate(exp) {
+	if( typeof exp != "string") {
+		return;
+	}
+	var str = new String(exp);
+	var nums = str.match(/\d+/g);
+	var operator = str.match(/[\+\-\*\/\(\)]/g);
+	var stack = [];
+	while( temp = nums.shift()) {
+		if(stack.length == 0 || stack[stack.length - 1] == "+" || stack[stack.length - 1] == "-" || stack[stack.length - 1] == "(") {
+			stack.push(temp);
+		} else {
+			var op = stack.pop();
+			if(op == '*') {
+				stack.push(stack.pop() * temp);
+			} else {
+				stack.push(stack.pop() / temp);
+			}
+		}
+		var op = operator.shift();
+		if(op != ")" && typeof op != "undefined") {
+			stack.push(op);
+		} else {
+			//unfinished
+		}
+	}
+}
+
+function slider(container, sources, count, option) {
+	this._container = $id(container);
+	this._sources = sources;
+	this._count = this._sources.length;
+	this._target = 0;
+	this.index = 0;
+	this._b = this._c = this._t = 0;
+	this._d = 100;
+	this._timer = null;
+	this.setOption(option);
+	var p = this._container.style.position; p == "relative" || p == "absolute" || (this._container.style.position = "relative");
+	this._container.style.overflow = "hidden";
+	this._slider = document.createElement("div");
+	if(this.option.vertical) {
+		this._slider.style.height = this._container.clientHeight * sources.length+ "px";
+	} else {
+		this._slider.style.width = this._container.clientWidth * sources.length+ "px";
+	}
+	for(var imgIdx in sources) {
+		var img = document.createElement("img");
+		img.src = sources[imgIdx];
+		img.width = this._container.clientWidth;
+		img.height = this._container.clientHeight;
+		this._slider.appendChild(img);
+	}
+	this._slider.style.position = "absolute";
+	this._container.appendChild(this._slider);
+};
+
+slider.prototype = {
+	setOption : function(option) {
+		this.option = {
+			start : 0,
+			vertical : false,
+			auto : true,
+			change : 0,
+			duration : 50,
+			time : 10,
+			pause : 2000,
+			onStart : function() {
+			},
+			onFinish : function() {
+			},
+			Tween : Tween.Bounce.easeOut
+		}
+		$extend(this.option, option);
+	},
+	run : function(index) {
+		index = this.index%this._count; 
+		
+		index < 0 && ( index = this._count - 1) ;
+		this._t = 0;
+		this._b = this.option.start * (this.option.vertical ? this._container.clientHeight : this._container.clientWidth); 
+		this._c = (index - this.option.start) * (this.option.vertical ? this._container.clientHeight : this._container.clientWidth);
+
+		this.option.onStart();
+		this.move();
+		this.option.start=index;
+	},
+	moveTo : function(pos) {
+		if(this.option.vertical)
+			this._slider.style.top = -pos + "px";
+		else
+			this._slider.style.left = -pos + "px";
+	},
+	move : function() {
+		clearTimeout(this._timer);
+		//未到达目标继续移动否则进行下一次滑动
+		if(this._c && this._t < this._d) {
+			this.moveTo(Math.round(this.option.Tween(this._t++, this._b, this._c, this._d)));
+			this._timer = setTimeout(bind(this.move,this), this.option.time);
+		} else {
+			this.moveTo(this._b+this._c);
+			this.option.auto && (this._timer = setTimeout(bind(this.Next,this), this.option.pause));
+		}
+	},
+	Next : function() {
+		this.run(++this.index);
+	},
+	//上一个
+	Previous : function() {
+		this.run(--this.index);
+	},
+	//停止
+	Stop : function() {
+		clearTimeout(this._timer);
+		this.moveTo(this._b+this._c);
 	}
 }
